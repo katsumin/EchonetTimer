@@ -1,0 +1,45 @@
+.adddel-button {
+  border: none;
+  background-color: transparent;
+  padding-right: 0px;
+  vertical-align: middle;
+}
+
+.time-value {
+  width: 5em;
+  height: 2em;
+  vertical-align: middle;
+}
+
+.mode-select {
+  width: 5em;
+  height: 2em;
+  vertical-align: middle;
+}
+
+.select-color {
+  vertical-align: middle;
+  height: 2em;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.reflect-button {
+  border: none;
+  background-color: transparent;
+  height: 50%;
+  font-size: xxx-large;
+  width: 100%;
+}
+
+.send-button {
+  border: none;
+  background-color: transparent;
+  height: 50%;
+  font-size: xxx-large;
+  width: 100%;
+}
