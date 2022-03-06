@@ -43,3 +43,7 @@
   font-size: xxx-large;
   width: 100%;
 }
+
+.charge-upper.invisible {
+  display: none;
+}

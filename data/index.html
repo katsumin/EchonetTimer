@@ -27,6 +27,18 @@
 				}
 			});
 
+			$(document).on("change", ".mode-select", function() {
+				const sel = $(this).val();
+				console.log(sel);
+				const chargeUpper = $(this).parent().children(".charge-upper");
+				if (sel === "da42") {
+					// モード選択が「充電」の場合、上限値設定を表示する
+					chargeUpper.removeClass("invisible");
+				} else {
+					chargeUpper.addClass("invisible");
+				}
+			});
+
 			$(document).ready(function() {
 				// Echonetデバイス取得
 				requestObject("/keys", "", function(keys) {

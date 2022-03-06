@@ -52,4 +52,26 @@ public:
     void initializeSettings();
 };
 
+class TimeTableValue
+{
+private:
+    uint8_t _epc;
+    uint8_t _state;
+    uint8_t _upper;
+
+public:
+    TimeTableValue(uint16_t state, uint8_t upper)
+    {
+        setEpc((state >> 8) & 0xff);
+        setState(state & 0xff);
+        setChargeUpper(upper);
+    }
+    inline uint8_t getEpc() const { return _epc; }
+    inline void setEpc(uint8_t epc) { _epc = epc; }
+    inline uint8_t getState() const { return _state; }
+    inline void setState(uint8_t state) { _state = state; }
+    inline uint8_t getChargeUpper() const { return _upper; }
+    inline void setChargeUpper(uint8_t uppser) { _upper = uppser; }
+};
+
 #endif

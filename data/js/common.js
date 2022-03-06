@@ -43,7 +43,7 @@ function copySelectItem(target) {
 	cp.clockpicker();
 }
 
-function createSelectItem(selectObj, time, value, color) {
+function createSelectItem(selectObj, time, value, color, upper) {
 	const selectItem = $("<div></div");
 	const timeObj = $("<input type='text' class='time-value'/>").appendTo(selectItem);
 	timeObj.val(time);
@@ -52,6 +52,13 @@ function createSelectItem(selectObj, time, value, color) {
 	selectObj.val(value);
 	const colorObj = $("<input type='color' class='select-color' />").appendTo(selectItem);
 	colorObj.val(color);
+	const upperObj = $("<span class='charge-upper'>蓄電量が<input type='number' min='30' max='90' value='50'/>％になったら待機</span>");
+	upperObj.find("input").val(upper);
+	if (value !== "da42") {
+		// 選択肢が「充電」以外では非表示
+		upperObj.addClass("invisible");
+	}
+	upperObj.appendTo(selectItem);
 	$(`
 	<button class="add bi-plus-circle adddel-button"></button>
 	<button class="del bi-dash-circle adddel-button"></button>
@@ -87,7 +94,7 @@ function createRowItem(dataObj) {
 				<option value="da46">自動</option>
 			</select>
 			`);
-			const selectItem = createSelectItem(selectObj, null, null, null);
+			const selectItem = createSelectItem(selectObj, null, null, null, null);
 			selectItem.appendTo(selectContainer);
 		} else {
 			table.forEach( function(t) {
@@ -100,7 +107,7 @@ function createRowItem(dataObj) {
 					<option value="da46">自動</option>
 				</select>
 				`);
-				const selectItem = createSelectItem(selectObj, t["time"], t["value"], t["color"]);
+				const selectItem = createSelectItem(selectObj, t["time"], t["value"], t["color"], t["upper"]);
 				selectItem.appendTo(selectContainer);
 			});
 			}
@@ -115,7 +122,7 @@ function createRowItem(dataObj) {
 				<option value="8031">ＯＦＦ</option>
 			</select>
 			`);
-			const selectItem = createSelectItem(selectObj, null, null, null);
+			const selectItem = createSelectItem(selectObj, null, null, null, null);
 			selectItem.appendTo(selectContainer);
 		} else {
 			table.forEach( function(t) {
@@ -126,7 +133,7 @@ function createRowItem(dataObj) {
 					<option value="8031">ＯＦＦ</option>
 				</select>
 				`);
-				const selectItem = createSelectItem(selectObj, t["time"], t["value"], t["color"]);
+				const selectItem = createSelectItem(selectObj, t["time"], t["value"], t["color"], t["upper"]);
 				selectItem.appendTo(selectContainer);
 			});
 			}
@@ -191,11 +198,13 @@ function extractSelectObject(selectContainer) {
 		const t = $(elm).find(".time-value").val();
 		const v = $(elm).find(".mode-select").val();
 		const c = $(elm).find(".select-color").val();
+		const u = $(elm).find(".charge-upper input").val();
 		if (t !== null && t.length > 0 && v !== null && v.length > 0) {
 			table.push({
 				time : t,
 				value : v,
-				color: c
+				color: c,
+				upper: u
 			});
 		}
 	});

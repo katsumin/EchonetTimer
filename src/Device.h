@@ -14,6 +14,7 @@ typedef struct
 } ECHONET_DATA;
 
 class Node;
+class TimeTableValue;
 
 class Device
 {
@@ -22,7 +23,7 @@ private:
     Node *_node;
     NTPClient *_ntp;
     String _alias;
-    std::map<uint16_t, uint16_t, std::greater<uint16_t>> _time_table;
+    std::map<uint16_t, TimeTableValue *, std::greater<uint16_t>> _time_table;
     byte _cmd_buf[1 + 2 + 2 + 3 + 3 + 1 + 1 + 5 * 2] = {
         sizeof(_cmd_buf) - 1, // len
         0x10, 0x81,           // EHD
@@ -65,11 +66,11 @@ public:
     inline NTPClient *getNtp() { return _ntp; }
     inline void setAlias(String alias) { _alias = alias; }
     inline String getAlias() { return _alias; }
-    inline void setTimeTable(uint16_t time, uint16_t action)
+    inline void setTimeTable(uint16_t time, TimeTableValue *action)
     {
         _time_table[time] = action;
     }
-    inline std::map<uint16_t, uint16_t, std::greater<uint16_t>> getTimeTable() { return _time_table; }
+    inline std::map<uint16_t, TimeTableValue *, std::greater<uint16_t>> getTimeTable() { return _time_table; }
     inline void clearTimeTable() { _time_table.clear(); }
     static Device *createInstance(byte eoj0, byte eoj1, byte eoj2, Node *node);
 };

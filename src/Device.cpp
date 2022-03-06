@@ -50,8 +50,8 @@ byte *Aircon::request()
         for (const auto &p : getTimeTable())
         {
             // Serial.printf("%02d:%02d -> %04x\n", p.first / 60, p.first % 60, p.second);
-            uint8_t toOnOff = p.second & 0xff;
-            uint8_t epc = (p.second >> 8) & 0xff;
+            uint8_t toOnOff = p.second->getState();
+            uint8_t epc = p.second->getEpc();
             Serial.printf(" %02x: %02x -> %02x\n", epc, _on, toOnOff);
             if (t >= p.first)
             {
@@ -180,11 +180,22 @@ byte *Battery::request()
         for (const auto &p : getTimeTable())
         {
             // Serial.printf("%02d:%02d -> %04x\n", p.first / 60, p.first % 60, p.second);
-            uint8_t toMode = p.second & 0xff;
-            uint8_t epc = (p.second >> 8) & 0xff;
-            Serial.printf(" %02x: %02x -> %02x\n", epc, _mode, toMode);
+            uint8_t toMode = p.second->getState();
+            uint8_t epc = p.second->getEpc();
+            uint8_t upper = p.second->getChargeUpper();
+            Serial.printf(" %02x: %02x -> %02x(%02d%%)\n", epc, _mode, toMode, upper);
             if (t >= p.first)
             {
+                if (toMode == 0x42)
+                {
+                    // 充電モード
+                    if (_percent >= upper)
+                    {
+                        // 充電上限値に達したら、待機モードへ
+                        toMode = 0x44; // 待機モード
+                        Serial.printf(" %02d%% >= %02d%% -> %02x\n", _percent, upper, toMode);
+                    }
+                }
                 Serial.printf("%02d:%02d >= %02d:%02d", t / 60, t % 60, p.first / 60, p.first % 60);
                 if (_mode != toMode)
                 {

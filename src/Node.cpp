@@ -129,7 +129,14 @@ void Node::reflectSettings(String settings)
                 int pos = t.indexOf(':');
                 uint16_t time = t.substring(0, pos).toInt() * 60 + t.substring(pos + 1).toInt();
                 uint16_t value = strtoul((const char *)table[i]["value"], NULL, 16);
-                _devices[type]->setTimeTable(time, value);
+                uint8_t upper = 0;
+                const char *pUpper = (const char *)table[i]["upper"];
+                if (pUpper != NULL && strlen(pUpper) > 0)
+                {
+                    upper = strtoul(pUpper, NULL, 10);
+                }
+                TimeTableValue *v = new TimeTableValue(value, upper);
+                _devices[type]->setTimeTable(time, v);
                 Serial.printf("%04d -> %04x\n", time, value);
             }
         }
